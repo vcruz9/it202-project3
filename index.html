@@ -5,29 +5,41 @@
 <script>
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
-var g1= {x:100, y:75, r:20, color: "purple", speed:1};
-var g2= {x:20, y:25, r:10, color: "red", speed: 2};    
-var player= {x:20, y:c.height/2, r:15, color: "blue", speed: 5}; 
+var game = {score: 0, lives: 3, state: "play"};
+var gameObjects = [];
     
-    var arrayG = [g1,g2,player];
+gameObjects.push({type: "harm", x:100, y:75, r:20, color: "purple", speed:1});
+gameObjects.push({type: "benefit", x:20, y:25, r:10, color: "red", speed: 2});    
+gameObjects.push({type: "player", x:20, y:c.height/2, r:15, color: "blue", speed: 5}); 
+
+    var player = gameObjects[0];
     
    function draw() {
        //clear canvas
        ctx.clearRect(0, 0, c.width, c.height);
        
        //draw
-       for (idx in arrayG) {
-           g1=arrayG[idx];
+       for (idx in gameObjects) {
+           g1=gameObjects[idx];
            ctx.beginPath();
            ctx.arc(g1.x, g1.y, g1.r, 0, 2 * Math.PI);
            //ctx.stroke();
            ctx.fillStyle = g1.color;
            ctx.fill();
            
-       if (g1.color !="blue") {
+       if (g1.type !="player") {
            
         //speed
        g1.x += g1.speed;
+           
+       if (colliding(player,g1)) {
+           if (g1.type == "harm") {
+               game.lives --;
+           } else if (g.type == "benefit") {
+                      game.score += 100; 
+                      }
+       }
+       
        
        if (g1.x-g1.r > c.width) {
            g1.x = 0-g1.r;
@@ -43,26 +55,40 @@ var player= {x:20, y:c.height/2, r:15, color: "blue", speed: 5};
    }
     window.requestAnimationFrame (draw);
     
+   //Collision 
+   function colliding (circle1, circle2) {
+       var result = false;
+    var dx = circle1.x - circle2.x;
+    var dy = circle1.y - circle2.y;
+    var distance = Math.sqrt(dx * dx + dy * dy);
+
+     if (distance < circle1.r + circle2.r) {
+            result = true;
+}
+       return result;
+       
+   }
+    
+    
     //KeyPresses
  document.onkeydown = checkKey;
-
 function checkKey(e) {
 
     e = e || window.event;
 
-    if (e.keyCode == '38') {
+    if (e.keyCode == '87') {
         // up arrow
       player.y -= player.speed;
     }
-    else if (e.keyCode == '40') {
+    else if (e.keyCode == '83') {
         // down arrow
         player.y += player.speed;
     }
-    else if (e.keyCode == '37') {
+    else if (e.keyCode == '65') {
        // left arrow
        player.x -= player.speed;
     }
-    else if (e.keyCode == '39') {
+    else if (e.keyCode == '68') {
        // right arrow
        player.x += player.speed;
     }
