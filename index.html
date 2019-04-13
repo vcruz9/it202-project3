@@ -7,38 +7,33 @@ var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 var g1= {x:100, y:75, r:20, color: "purple", speed:1};
 var g2= {x:20, y:25, r:10, color: "red", speed: 2};    
-   
+var player= {x:20, y:c.height/2, r:15, color: "blue", speed: 1}; 
+    
+    var arrayG = [g1,g2,player];
     
    function draw() {
-       
+       //clear canvas
        ctx.clearRect(0, 0, c.width, c.height);
        
-       ctx.beginPath();
-       ctx.arc(g1.x, g1.y, g1.r, 0, 2 * Math.PI);
-       ctx.stroke();
-       ctx.fillStyle = g1.color;
-       ctx.fill();
-       
-        ctx.beginPath();
-       ctx.arc(g2.x, g2.y, g2.r, 0, 2 * Math.PI);
-       ctx.stroke();
-       ctx.fillStyle = g2.color;
-       ctx.fill();
-       
-      
+       //draw
+       for (idx in arrayG) {
+           g1=arrayG[idx];
+           ctx.beginPath();
+           ctx.arc(g1.x, g1.y, g1.r, 0, 2 * Math.PI);
+           //ctx.stroke();
+           ctx.fillStyle = g1.color;
+           ctx.fill();
+           
+       //speed
        g1.x += g1.speed;
-       g2.x += g2.speed;
        
        if (g1.x-g1.r > c.width) {
-           
            g1.x = 0-g1.r;
+           g1.y = Math.random() * (c.height - 0) + 0;
+           //if we want to change speed g1.speed += 1;
+            }
+            
        }
-        if (g2.x-g2.r > c.width) {
-           
-           g2.x = 0-g2.r;
-       }
-       
-       
        
        
        window.requestAnimationFrame (draw);
