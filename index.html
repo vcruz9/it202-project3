@@ -7,7 +7,7 @@ var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 var g1= {x:100, y:75, r:20, color: "purple", speed:1};
 var g2= {x:20, y:25, r:10, color: "red", speed: 2};    
-var player= {x:20, y:c.height/2, r:15, color: "blue", speed: 1}; 
+var player= {x:20, y:c.height/2, r:15, color: "blue", speed: 5}; 
     
     var arrayG = [g1,g2,player];
     
@@ -24,7 +24,9 @@ var player= {x:20, y:c.height/2, r:15, color: "blue", speed: 1};
            ctx.fillStyle = g1.color;
            ctx.fill();
            
-       //speed
+       if (g1.color !="blue") {
+           
+        //speed
        g1.x += g1.speed;
        
        if (g1.x-g1.r > c.width) {
@@ -32,7 +34,8 @@ var player= {x:20, y:c.height/2, r:15, color: "blue", speed: 1};
            g1.y = Math.random() * (c.height - 0) + 0;
            //if we want to change speed g1.speed += 1;
             }
-            
+          
+       }
        }
        
        
@@ -40,5 +43,30 @@ var player= {x:20, y:c.height/2, r:15, color: "blue", speed: 1};
    }
     window.requestAnimationFrame (draw);
     
+    //KeyPresses
+ document.onkeydown = checkKey;
+
+function checkKey(e) {
+
+    e = e || window.event;
+
+    if (e.keyCode == '38') {
+        // up arrow
+      player.y -= player.speed;
+    }
+    else if (e.keyCode == '40') {
+        // down arrow
+        player.y += player.speed;
+    }
+    else if (e.keyCode == '37') {
+       // left arrow
+       player.x -= player.speed;
+    }
+    else if (e.keyCode == '39') {
+       // right arrow
+       player.x += player.speed;
+    }
+
+}
     
 </script>
