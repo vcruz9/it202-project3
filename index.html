@@ -5,17 +5,21 @@
 <script>
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
-var game = {score: 0, lives: 3, state: "play"};
+var game = {score: 0, lives: 3, state: "play", level: 1};
 var gameObjects = [];
     
 gameObjects.push({type: "player", x:20, y:c.height/2, r:15, color: "blue", speed: 5}); 
-gameObjects.push({type: "harm", x:100, y:75, r:20, color: "purple", speed:1});
-gameObjects.push({type: "benefit", x:20, y:25, r:10, color: "red", speed: 2});    
+gameObjects.push({type: "harm", x:100, y:75, r:10, color: "purple", speed:1});
+gameObjects.push({type: "benefit", x:20, y:25, r:20, color: "red", speed: 2});    
 
 
     var player = gameObjects[0];
     var backgroundImg = new Image();
     backgroundImg.src = "grass.jpg";
+    
+    ctx.font = "30px Comic Sans MS";
+    ctx.fillStyle = "red";
+    ctx.textAlign = "center";
     
    function draw() {
        //clear canvas
@@ -34,13 +38,21 @@ gameObjects.push({type: "benefit", x:20, y:25, r:10, color: "red", speed: 2});
        if (g1.type !="player") {
            
         //speed
-       g1.x -= g1.speed;
+       g1.x -= g1.speed * game.level;
            
        if (colliding(player,g1)) {
            if (g1.type == "harm") {
                game.lives --;
            } else if (g1.type == "benefit") {
                       game.score += 100;
+               if (game.score % 300 == 0) {
+                   game.level ++;
+                   if (game.level % 2 ==0) {
+                   gameObjects.push({type: "harm", x:100, y:75, r:10, color: "purple", speed:1});
+                   }
+
+               }
+               
            }
            g1.state = "collision";
        }
@@ -55,10 +67,26 @@ gameObjects.push({type: "benefit", x:20, y:25, r:10, color: "red", speed: 2});
           
        }
        }
-       
-       
+               //ScoreKeeperText
+    ctx.fillText("Score: " + game.score + " - Lives: " + game.lives, c.width/2, 30); 
+   
+       if (game.lives > -1) {
        window.requestAnimationFrame (draw);
+       } else {
+           gameOver();
+       }
    }
+    
+    function gameOver() {
+       ctx.clearRect(0, 0, c.width, c.height);
+       ctx.drawImage(backgroundImg, 0, 0);
+       ctx.fillText("Boohoo You Lost!", c.width/2, c.height/2); 
+ 
+    }
+    
+    
+
+
     window.requestAnimationFrame (draw);
     
    //Collision 
@@ -100,11 +128,6 @@ function checkKey(e) {
     }
 
 }
-    
-    //ScoreKeeperText
-   /* ctx.font = "30px Comic Sans MS";
-    ctx.fillStyle = "red";
-    ctx.textAlign = "center";
-    ctx.fillText("Score: " + game.score + " - Lives: " + game.lives, c.width/2, 30); 
-    */
+
+  
 </script>
