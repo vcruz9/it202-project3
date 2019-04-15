@@ -1,40 +1,80 @@
+<html>
+<body bgcolor="#ccffff">
+<style> 
+#myCanvas {
+padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+	margin-bottom: 0 auto;
+    display: block;
+background-image: url("beach.png");
+background-size: 100%;
+background-repeat: no-repeat;
+}
+
+h1 {
+font-family: Comic Sans MS;
+}
+h2 {
+font-family: Comic Sans MS;
+}
+</style>
 <canvas 
-        id="myCanvas" width="600"height="400" style="border:1px solid #000000;">
+        id="myCanvas" width="1250"height="800" style="border:1px solid #000000;">
 </canvas>
 
+
+
+<body>
+<h1> <center> Dash Dash </center> </h1>
+<h2> <center> Hello! Help Bob make his way across the beach! Please use W A S D to move around. <center> </h2>
 <script>
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 var game = {score: 0, lives: 3, state: "play", level: 1};
-var gameObjects = [];
-    
-gameObjects.push({type: "player", x:20, y:c.height/2, r:15, color: "blue", speed: 5}); 
-gameObjects.push({type: "harm", x:100, y:75, r:10, color: "purple", speed:1});
-gameObjects.push({type: "benefit", x:20, y:25, r:20, color: "red", speed: 2});    
 
 
-    var player = gameObjects[0];
+	
+var player = {type: "player", x:20, y:c.height/2, r:70, color: "blue", speed: 8}; 
+var v1 = {type: "harm", x:100, y:75, r:40, color: "purple", speed:1};
+var v2 = {type: "benefit", x:20, y:25, r:40, color: "yellow", speed: 2};    
+var gameObjects = [player, v1, v2];
+
     var backgroundImg = new Image();
-    backgroundImg.src = "grass.jpg";
-    
-    ctx.font = "30px Comic Sans MS";
-    ctx.fillStyle = "red";
-    ctx.textAlign = "center";
-    
+    backgroundImg.src = "beach.png";
+    var playerImg = new Image (50,50);
+    playerImg.src = "bob.png";
+	var v1Img = new Image();
+	v1Img.src = "death.png";
+	var v2Img = new Image();
+	v2Img.src = "heart.png";
+	
+ 
    function draw() {
        //clear canvas
        ctx.clearRect(0, 0, c.width, c.height);
-       ctx.drawImage(backgroundImg, 0, 0);
        
        //draw
        for (idx in gameObjects) {
            g1=gameObjects[idx];
-           ctx.beginPath();
-           ctx.arc(g1.x, g1.y, g1.r, 0, 2 * Math.PI);
+       if (g1.type == "player") {
+		 ctx.beginPath();
+         ctx.drawImage(playerImg, player.x-80, player.y-80, player.r+150, player.r+150);
+		//ctx.arc(player.x, player.y, player.r, 0, 2 * Math.PI);
            //ctx.stroke();
-           ctx.fillStyle = g1.color;
-           ctx.fill();
-           
+           //ctx.fillStyle = g1.color;
+           //ctx.fill();
+		   } else if ( g1.type == "harm") {
+		   ctx.beginPath();
+		   ctx.drawImage(v1Img, v1.x, v1.y, 40, 40);
+		   ctx.arc(v1.x, v1.y, v1.r, 0, 2 * Math.PI);
+		   } else if ( g1.type == "benefit") {
+		   ctx.beginPath();
+		   ctx.drawImage(v2Img, v2.x, v2.y, 150, 150);
+		   ctx.arc(v2.x, v2.y, v2.r, 0, 2 * Math.PI);
+		  }
+
        if (g1.type !="player") {
            
         //speed
@@ -48,7 +88,7 @@ gameObjects.push({type: "benefit", x:20, y:25, r:20, color: "red", speed: 2});
                if (game.score % 300 == 0) {
                    game.level ++;
                    if (game.level % 2 ==0) {
-                   gameObjects.push({type: "harm", x:100, y:75, r:10, color: "purple", speed:1});
+                   
                    }
 
                }
@@ -68,7 +108,12 @@ gameObjects.push({type: "benefit", x:20, y:25, r:20, color: "red", speed: 2});
        }
        }
                //ScoreKeeperText
+			       
+    ctx.font = "30px Comic Sans MS";
+    ctx.fillStyle = "red";
+    ctx.textAlign = "center";
     ctx.fillText("Score: " + game.score + " - Lives: " + game.lives, c.width/2, 30); 
+    ctx.fillText("Level " + game.level, c.width/2, 60);
    
        if (game.lives > -1) {
        window.requestAnimationFrame (draw);
@@ -131,3 +176,5 @@ function checkKey(e) {
 
   
 </script>
+</body>
+</html>
